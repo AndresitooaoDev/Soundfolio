@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sound Portfolio — Music & SFX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #080a0f;
+      --surface: #0f1318;
+      --surface2: #161b22;
+      --accent: #e8ff47;
+      --accent2: #47b8ff;
+      --text: #f0f2f5;
+      --muted: #5a6478;
+      --border: rgba(255,255,255,0.07);
+      --glow: 0 0 40px rgba(232,255,71,0.15);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.4;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5vw;
+      height: 64px;
+      background: rgba(8,10,15,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .nav-logo span { color: var(--text); }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    .nav-cta {
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--bg);
+      background: var(--accent);
+      padding: 0.5rem 1.2rem;
+      border-radius: 2px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: opacity 0.2s;
+    }
+
+    .nav-cta:hover { opacity: 0.8; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 5vw;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-grid-line {
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 1px;
+      background: var(--border);
+    }
+
+    .hero-grid-line:nth-child(1) { left: 5vw; }
+    .hero-grid-line:nth-child(2) { left: 33.3%; }
+    .hero-grid-line:nth-child(3) { left: 66.6%; }
+    .hero-grid-line:nth-child(4) { right: 5vw; }
+
+    .hero-eyebrow {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s forwards;
+    }
+
+    .hero-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(3.5rem, 9vw, 8rem);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.4s forwards;
+    }
+
+    .hero-title em {
+      font-style: normal;
+      color: var(--accent);
+      position: relative;
+      display: inline-block;
+    }
+
+    .hero-title em::after {
+      content: '';
+      position: absolute;
+      bottom: 4px; left: 0; right: 0;
+      height: 3px;
+      background: var(--accent);
+    }
+
+    .hero-sub {
+      margin-top: 2rem;
+      max-width: 420px;
+      font-size: 0.85rem;
+      line-height: 1.8;
+      color: var(--muted);
+      opacity: 0;
+      animation: fadeUp 0.8s 0.6s forwards;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.8s forwards;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 2rem;
+      background: var(--accent);
+      color: var(--bg);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .btn-primary:hover { box-shadow: var(--glow); transform: translateY(-2px); }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 2rem;
+      background: transparent;
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .btn-ghost:hover { border-color: var(--accent2); color: var(--accent2); }
+
+    /* Waveform decoration */
+    .hero-wave {
+      position: absolute;
+      right: 5vw;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.12;
+      width: clamp(180px, 28vw, 360px);
+    }
+
+    /* ── SECTION COMMON ── */
+    section {
+      padding: 100px 5vw;
+    }
+
+    .section-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.8rem;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 3rem;
+    }
+
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 60px;
+    }
+
+    /* ── MUSIC PLAYER SECTION ── */
+    #music {
+      background: var(--surface);
+      position: relative;
+    }
+
+    #music::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+
+    .player-wrapper {
+      max-width: 860px;
+    }
+
+    /* Track list */
+    .tracklist {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .track-item {
+      display: grid;
+      grid-template-columns: 36px 1fr auto auto;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.2rem;
+      cursor: pointer;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+      position: relative;
+    }
+
+    .track-item:last-child { border-bottom: none; }
+    .track-item:hover { background: rgba(232,255,71,0.04); }
+    .track-item.active { background: rgba(232,255,71,0.07); }
+
+    .track-num {
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-align: center;
+      font-style: italic;
+    }
+
+    .track-item.active .track-num { color: var(--accent); }
+
+    .track-info { overflow: hidden; }
+
+    .track-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .track-meta {
+      font-size: 0.68rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .track-genre {
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 2px 8px;
+      border-radius: 2px;
+      white-space: nowrap;
+    }
+
+    .track-item.active .track-genre {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .track-dur {
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Player Controls */
+    .player-controls {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.5rem;
+    }
+
+    .now-playing-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .now-playing-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+    }
+
+    /* Progress bar */
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .time-label {
+      font-size: 0.68rem;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .progress-bar {
+      flex: 1;
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.2s linear;
+      position: relative;
+    }
+
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      right: -4px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 10px;
+      height: 10px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(232,255,71,0.6);
+    }
+
+    /* Buttons row */
+    .ctrl-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .ctrl-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--muted);
+      padding: 0.5rem;
+      transition: color 0.15s, transform 0.1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ctrl-btn:hover { color: var(--text); }
+
+    .ctrl-btn.play-btn {
+      width: 44px;
+      height: 44px;
+      background: var(--accent);
+      color: var(--bg);
+      border-radius: 50%;
+      margin: 0 0.5rem;
+      transition: box-shadow 0.2s, transform 0.1s;
+    }
+
+    .ctrl-btn.play-btn:hover {
+      box-shadow: 0 0 20px rgba(232,255,71,0.4);
+      transform: scale(1.05);
+    }
+
+    .ctrl-btn:active { transform: scale(0.95); }
+
+    .volume-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-left: auto;
+    }
+
+    .volume-slider {
+      -webkit-appearance: none;
+      width: 80px;
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px;
+      height: 12px;
+      background: var(--accent2);
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    /* Waveform canvas */
+    .viz-canvas-wrap {
+      width: 100%;
+      height: 60px;
+      margin-bottom: 1rem;
+      border-radius: 3px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    #waveform-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* ── VIDEO SECTION ── */
+    #sfx {
+      background: var(--bg);
+      position: relative;
+    }
+
+    #sfx::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent2), transparent);
+    }
+
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 2rem;
+    }
+
+    .video-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .video-card:hover {
+      border-color: rgba(71,184,255,0.35);
+      transform: translateY(-4px);
+    }
+
+    .video-embed {
+      position: relative;
+      padding-bottom: 56.25%;
+      background: #000;
+    }
+
+    .video-embed iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Placeholder when no video */
+    .video-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface2);
+      gap: 0.8rem;
+      cursor: pointer;
+    }
+
+    .video-placeholder svg { opacity: 0.3; }
+
+    .video-placeholder span {
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    .video-card-body {
+      padding: 1.1rem 1.2rem 1rem;
+      background: var(--surface);
+    }
+
+    .video-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .video-desc {
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .video-disclaimer {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.7rem;
+      padding-top: 0.7rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.65rem;
+      color: var(--muted);
+      font-style: italic;
+      letter-spacing: 0.03em;
+    }
+
+    .video-disclaimer svg { flex-shrink: 0; opacity: 0.6; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 3rem 5vw;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      color: var(--accent);
+    }
+
+    .footer-logo span { color: var(--muted); }
+
+    .footer-copy {
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .video-grid { grid-template-columns: 1fr; }
+      .hero-wave { display: none; }
+      .ctrl-row .ctrl-btn:first-child, .ctrl-row .ctrl-btn:last-child { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ──────────────────── NAVBAR ──────────────────── -->
+  <nav>
+    <a class="nav-logo" href="#">SOUND<span>FOLIO</span></a>
+    <ul class="nav-links">
+      <li><a href="#music">Music</a></li>
+      <li><a href="#sfx">SFX</a></li>
+    </ul>
+    <a class="nav-cta" href="mailto:youremail@example.com">Contact</a>
+  </nav>
+
+
+  <!-- ──────────────────── HERO ──────────────────── -->
+  <section class="hero" id="home">
+    <div class="hero-grid-line"></div>
+    <div class="hero-grid-line"></div>
+    <div class="hero-grid-line"></div>
+    <div class="hero-grid-line"></div>
+
+    <p class="hero-eyebrow">// Music Composer & SFX Designer</p>
+    <h1 class="hero-title">Sound<br>that <em>hits</em><br>different.</h1>
+    <p class="hero-sub">Original music, sound design, and SFX work crafted for animation, games, and multimedia projects.</p>
+    <div class="hero-actions">
+      <a href="#music" class="btn-primary">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+        Listen
+      </a>
+      <a href="#sfx" class="btn-ghost">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><polyline points="8,21 12,17 16,21"/></svg>
+        Watch SFX
+      </a>
+    </div>
+
+    <!-- Decorative waveform SVG -->
+    <svg class="hero-wave" viewBox="0 0 320 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polyline points="0,60 10,45 20,72 30,30 40,80 50,20 60,85 70,38 80,70 90,25 100,75 110,50 120,60 130,35 140,78 150,15 160,85 170,45 180,65 190,30 200,80 210,48 220,62 230,40 240,75 250,22 260,82 270,50 280,60 290,42 300,72 310,55 320,60"
+        stroke="#e8ff47" stroke-width="1.5" fill="none"/>
+    </svg>
+  </section>
+
+
+  <!-- ──────────────────── MUSIC PLAYER ──────────────────── -->
+  <section id="music">
+    <div class="player-wrapper">
+      <p class="section-label">// 01 — Original Music</p>
+      <h2 class="section-title">My Works</h2>
+      <div class="divider"></div>
+
+      <!-- Track list — ADD YOUR TRACKS BELOW -->
+      <div class="tracklist" id="tracklist">
+
+        <!-- ─── TRACK 1 ─── -->
+        <div class="track-item" data-src="" data-title="Track Title One" onclick="selectTrack(this, 0)">
+          <span class="track-num">01</span>
+          <div class="track-info">
+            <div class="track-name">Track Title One</div>
+            <div class="track-meta">2024</div>
+          </div>
+          <span class="track-genre">Cinematic</span>
+          <span class="track-dur">—:——</span>
+        </div>
+
+        <!-- ─── TRACK 2 ─── -->
+        <div class="track-item" data-src="" data-title="Track Title Two" onclick="selectTrack(this, 1)">
+          <span class="track-num">02</span>
+          <div class="track-info">
+            <div class="track-name">Track Title Two</div>
+            <div class="track-meta">2024</div>
+          </div>
+          <span class="track-genre">Electronic</span>
+          <span class="track-dur">—:——</span>
+        </div>
+
+        <!-- ─── TRACK 3 ─── -->
+        <div class="track-item" data-src="" data-title="Track Title Three" onclick="selectTrack(this, 2)">
+          <span class="track-num">03</span>
+          <div class="track-info">
+            <div class="track-name">Track Title Three</div>
+            <div class="track-meta">2023</div>
+          </div>
+          <span class="track-genre">Ambient</span>
+          <span class="track-dur">—:——</span>
+        </div>
+
+        <!-- ─── TRACK 4 ─── -->
+        <div class="track-item" data-src="" data-title="Track Title Four" onclick="selectTrack(this, 3)">
+          <span class="track-num">04</span>
+          <div class="track-info">
+            <div class="track-name">Track Title Four</div>
+            <div class="track-meta">2023</div>
+          </div>
+          <span class="track-genre">Orchestral</span>
+          <span class="track-dur">—:——</span>
+        </div>
+
+      </div><!-- /tracklist -->
+
+      <!-- Player Controls -->
+      <div class="player-controls">
+        <div class="now-playing-label">Now playing</div>
+        <div class="now-playing-title" id="np-title">Select a track</div>
+
+        <!-- Real waveform canvas -->
+        <div class="viz-canvas-wrap">
+          <canvas id="waveform-canvas"></canvas>
+        </div>
+
+        <!-- Progress -->
+        <div class="progress-wrap">
+          <span class="time-label" id="cur-time">0:00</span>
+          <div class="progress-bar" id="progress-bar" onclick="seekTo(event)">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+          <span class="time-label" id="dur-time">0:00</span>
+        </div>
+
+        <!-- Buttons -->
+        <div class="ctrl-row">
+          <!-- Prev -->
+          <button class="ctrl-btn" onclick="prevTrack()" title="Previous">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <polygon points="19,20 9,12 19,4"/><line x1="5" y1="19" x2="5" y2="5"/>
+            </svg>
+          </button>
+
+          <!-- Play/Pause -->
+          <button class="ctrl-btn play-btn" id="play-btn" onclick="togglePlay()" title="Play / Pause">
+            <svg id="icon-play" width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+            <svg id="icon-pause" width="18" height="18" fill="currentColor" viewBox="0 0 24 24" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+          </button>
+
+          <!-- Next -->
+          <button class="ctrl-btn" onclick="nextTrack()" title="Next">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <polygon points="5,4 15,12 5,20"/><line x1="19" y1="5" x2="19" y2="19"/>
+            </svg>
+          </button>
+
+          <!-- Volume -->
+          <div class="volume-wrap">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <polygon points="11,5 6,9 2,9 2,15 6,15 11,19"/><path d="M15.54,8.46a5,5,0,0,1,0,7.07"/>
+            </svg>
+            <input type="range" class="volume-slider" id="volume" min="0" max="1" step="0.01" value="0.85" oninput="setVolume(this.value)" />
+          </div>
+        </div>
+      </div><!-- /player-controls -->
+
+    </div>
+  </section>
+
+
+  <!-- ──────────────────── SFX VIDEO SECTION ──────────────────── -->
+  <section id="sfx">
+    <p class="section-label">// 02 — Sound FX & Animation</p>
+    <h2 class="section-title">SFX Work</h2>
+    <div class="divider"></div>
+
+    <div class="video-grid">
+
+      <!-- ─── VIDEO 1 ─── Replace src with your YouTube embed URL ─── -->
+      <div class="video-card">
+        <div class="video-embed">
+          <!--
+            TO ADD A YOUTUBE VIDEO:
+            Replace the src below with:
+            https://www.youtube.com/embed/YOUR_VIDEO_ID
+          -->
+          <div class="video-placeholder" onclick="this.innerHTML='<iframe src=\'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1\' allow=\'autoplay; fullscreen\'></iframe>'">
+            <svg width="48" height="48" fill="none" stroke="#e8ff47" stroke-width="1.5" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+            <span>Project 01 — Click to load</span>
+          </div>
+        </div>
+        <div class="video-card-body">
+          <div class="video-title">Project Title One</div>
+          <div class="video-desc">Short description of the project. Genre, mood, or context — keep it brief.</div>
+          <div class="video-disclaimer">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Animations are not mine — SFX work only.
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── VIDEO 2 ─── -->
+      <div class="video-card">
+        <div class="video-embed">
+          <div class="video-placeholder" onclick="this.innerHTML='<iframe src=\'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1\' allow=\'autoplay; fullscreen\'></iframe>'">
+            <svg width="48" height="48" fill="none" stroke="#e8ff47" stroke-width="1.5" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+            <span>Project 02 — Click to load</span>
+          </div>
+        </div>
+        <div class="video-card-body">
+          <div class="video-title">Project Title Two</div>
+          <div class="video-desc">Short description of the project. Genre, mood, or context — keep it brief.</div>
+          <div class="video-disclaimer">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Animations are not mine — SFX work only.
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── VIDEO 3 ─── -->
+      <div class="video-card">
+        <div class="video-embed">
+          <div class="video-placeholder" onclick="this.innerHTML='<iframe src=\'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1\' allow=\'autoplay; fullscreen\'></iframe>'">
+            <svg width="48" height="48" fill="none" stroke="#e8ff47" stroke-width="1.5" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+            <span>Project 03 — Click to load</span>
+          </div>
+        </div>
+        <div class="video-card-body">
+          <div class="video-title">Project Title Three</div>
+          <div class="video-desc">Short description of the project. Genre, mood, or context — keep it brief.</div>
+          <div class="video-disclaimer">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Animations are not mine — SFX work only.
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── VIDEO 4 ─── -->
+      <div class="video-card">
+        <div class="video-embed">
+          <div class="video-placeholder" onclick="this.innerHTML='<iframe src=\'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1\' allow=\'autoplay; fullscreen\'></iframe>'">
+            <svg width="48" height="48" fill="none" stroke="#e8ff47" stroke-width="1.5" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+            <span>Project 04 — Click to load</span>
+          </div>
+        </div>
+        <div class="video-card-body">
+          <div class="video-title">Project Title Four</div>
+          <div class="video-desc">Short description of the project. Genre, mood, or context — keep it brief.</div>
+          <div class="video-disclaimer">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Animations are not mine — SFX work only.
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /video-grid -->
+  </section>
+
+
+  <!-- ──────────────────── FOOTER ──────────────────── -->
+  <footer>
+    <div class="footer-logo">SOUND<span>FOLIO</span></div>
+    <p class="footer-copy">© 2025 — All rights reserved.</p>
+  </footer>
+
+
+  <!-- ──────────────────── AUDIO ENGINE ──────────────────── -->
+  <audio id="audio-engine" preload="metadata"></audio>
+
+  <script>
+    const audio = document.getElementById('audio-engine');
+    const trackItems = document.querySelectorAll('.track-item');
+    const npTitle = document.getElementById('np-title');
+    const progressFill = document.getElementById('progress-fill');
+    const curTimeEl = document.getElementById('cur-time');
+    const durTimeEl = document.getElementById('dur-time');
+    const iconPlay = document.getElementById('icon-play');
+    const iconPause = document.getElementById('icon-pause');
+    const canvas = document.getElementById('waveform-canvas');
+    const ctx2d = canvas.getContext('2d');
+
+    let currentIndex = -1;
+    let isPlaying = false;
+    let animFrame = null;
+
+    // ── Web Audio API setup ──
+    let audioCtx = null;
+    let analyser = null;
+    let source = null;
+
+    function initAudioContext() {
+      if (audioCtx) return;
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 256;
+      analyser.smoothingTimeConstant = 0.8;
+      source = audioCtx.createMediaElementSource(audio);
+      source.connect(analyser);
+      analyser.connect(audioCtx.destination);
+    }
+
+    // ── Canvas sizing ──
+    function resizeCanvas() {
+      const wrap = canvas.parentElement;
+      canvas.width  = wrap.offsetWidth * window.devicePixelRatio;
+      canvas.height = wrap.offsetHeight * window.devicePixelRatio;
+      ctx2d.scale(window.devicePixelRatio, window.devicePixelRatio);
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // ── Draw loop ──
+    function drawVisualizer() {
+      animFrame = requestAnimationFrame(drawVisualizer);
+
+      const W = canvas.width  / window.devicePixelRatio;
+      const H = canvas.height / window.devicePixelRatio;
+
+      ctx2d.clearRect(0, 0, W, H);
+
+      // Idle flat line when not playing
+      if (!analyser || !isPlaying) {
+        ctx2d.beginPath();
+        ctx2d.moveTo(0, H / 2);
+        ctx2d.lineTo(W, H / 2);
+        ctx2d.strokeStyle = 'rgba(232,255,71,0.15)';
+        ctx2d.lineWidth = 1.5;
+        ctx2d.stroke();
+        return;
+      }
+
+      const bufLen = analyser.frequencyBinCount;
+      const dataArr = new Uint8Array(bufLen);
+      analyser.getByteTimeDomainData(dataArr);
+
+      // Gradient stroke
+      const grad = ctx2d.createLinearGradient(0, 0, W, 0);
+      grad.addColorStop(0,   'rgba(232,255,71,0.2)');
+      grad.addColorStop(0.3, '#e8ff47');
+      grad.addColorStop(0.7, '#47b8ff');
+      grad.addColorStop(1,   'rgba(71,184,255,0.2)');
+
+      ctx2d.beginPath();
+      const sliceW = W / bufLen;
+      let x = 0;
+
+      for (let i = 0; i < bufLen; i++) {
+        const v = dataArr[i] / 128.0;
+        const y = (v * H) / 2;
+        if (i === 0) ctx2d.moveTo(x, y);
+        else ctx2d.lineTo(x, y);
+        x += sliceW;
+      }
+
+      ctx2d.lineTo(W, H / 2);
+      ctx2d.strokeStyle = grad;
+      ctx2d.lineWidth = 2;
+      ctx2d.lineJoin = 'round';
+      ctx2d.stroke();
+
+      // Mirror (reflection below center)
+      ctx2d.beginPath();
+      x = 0;
+      for (let i = 0; i < bufLen; i++) {
+        const v = dataArr[i] / 128.0;
+        const y = H - (v * H) / 2;
+        if (i === 0) ctx2d.moveTo(x, y);
+        else ctx2d.lineTo(x, y);
+        x += sliceW;
+      }
+      ctx2d.lineTo(W, H / 2);
+      ctx2d.strokeStyle = 'rgba(232,255,71,0.18)';
+      ctx2d.lineWidth = 1;
+      ctx2d.stroke();
+    }
+
+    drawVisualizer();
+
+    // ── Helpers ──
+    function formatTime(s) {
+      if (isNaN(s)) return '0:00';
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60);
+      return `${m}:${sec.toString().padStart(2, '0')}`;
+    }
+
+    function setActiveTrack(index) {
+      trackItems.forEach((t, i) => t.classList.toggle('active', i === index));
+    }
+
+    function selectTrack(el, index) {
+      const src   = el.dataset.src;
+      const title = el.dataset.title;
+
+      currentIndex = index;
+      setActiveTrack(index);
+      npTitle.textContent = title;
+
+      if (src && src.trim() !== '') {
+        audio.src = src;
+        audio.load();
+        playAudio();
+      } else {
+        npTitle.textContent = title + ' — (add audio file path)';
+      }
+    }
+
+    function playAudio() {
+      initAudioContext();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      audio.play().then(() => {
+        isPlaying = true;
+        iconPlay.style.display  = 'none';
+        iconPause.style.display = '';
+      }).catch(() => {});
+    }
+
+    function togglePlay() {
+      if (currentIndex === -1) {
+        if (trackItems.length > 0) selectTrack(trackItems[0], 0);
+        return;
+      }
+      if (isPlaying) {
+        audio.pause();
+        isPlaying = false;
+        iconPlay.style.display  = '';
+        iconPause.style.display = 'none';
+      } else {
+        playAudio();
+      }
+    }
+
+    function prevTrack() {
+      const idx = currentIndex <= 0 ? trackItems.length - 1 : currentIndex - 1;
+      selectTrack(trackItems[idx], idx);
+    }
+
+    function nextTrack() {
+      const idx = (currentIndex + 1) % trackItems.length;
+      selectTrack(trackItems[idx], idx);
+    }
+
+    function setVolume(v) { audio.volume = parseFloat(v); }
+
+    function seekTo(e) {
+      const bar = document.getElementById('progress-bar');
+      const ratio = e.offsetX / bar.offsetWidth;
+      if (audio.duration) audio.currentTime = ratio * audio.duration;
+    }
+
+    audio.addEventListener('timeupdate', () => {
+      if (!audio.duration) return;
+      const pct = (audio.currentTime / audio.duration) * 100;
+      progressFill.style.width = pct + '%';
+      curTimeEl.textContent = formatTime(audio.currentTime);
+      durTimeEl.textContent = formatTime(audio.duration);
+      if (currentIndex >= 0) {
+        trackItems[currentIndex].querySelector('.track-dur').textContent = formatTime(audio.duration);
+      }
+    });
+
+    audio.addEventListener('ended', () => {
+      isPlaying = false;
+      iconPlay.style.display  = '';
+      iconPause.style.display = 'none';
+      nextTrack();
+    });
+
+    // Navbar scroll
+    window.addEventListener('scroll', () => {
+      document.querySelector('nav').style.borderBottomColor = window.scrollY > 40
+        ? 'rgba(232,255,71,0.12)'
+        : 'rgba(255,255,255,0.07)';
+    });
+  </script>
+
+</body>
+</html>
